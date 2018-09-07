@@ -18,17 +18,19 @@ export REPO_PATH=$GOPATH/src/github.com/jjcollinge/sarama-cluster-eventhubs-kafk
 git clone https://github.com/jjcollinge/sarama-cluster-eventhub-kafka $REPO_PATH
 ```
 
-2. Add you EventHubs details to `consumer/consumer.go` and `producer/producer.go`.
+2. Open and edit `$REPO_PATH/cfg/cfg.go`.
 
-3. Run the producer then the consumer
+3. Add your Event Hubs namespace (#L21), name (#L23) and connection string (#L26)
+
+4. Run the producer - this should work OK.
 
 ```
-cd $REPO_PATH
-go run producer/producer.go
-go run consumer/consumer.go
+go run $REPO_PATH/producer/producer.go
 ```
-
-4. Observe "connection reset" errors on the consumer during rebalance.
+5. Run the consumer - this should error with `connection reset by peer`
+```
+go run $REPO_PATH/consumer/consumer.go
+```
 
 ## Debugging
 Ensure you have installed the [Go extension for vscode](https://github.com/Microsoft/vscode-go).

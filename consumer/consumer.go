@@ -6,41 +6,16 @@ import (
 	"os"
 	"os/signal"
 
-	"github.com/Shopify/sarama"
 	cluster "github.com/bsm/sarama-cluster"
+	"github.com/jjcollinge/sarama-cluster-eventhub-kafka/cfg"
 )
-
-/*
-	Define you EventHubs connection details.
-*/
-const (
-	namespace           = "my-namespace"
-	eventHubName        = "my-eventhub"
-	connectionStringKey = "$ConnectionString"
-	connectionString    = "my-connection-string"
-	consumerGroup       = "$Default"
-)
-
-func createSaramaClusterConfig() *cluster.Config {
-	config := cluster.NewConfig()
-	config.Version = sarama.V1_1_0_0
-	config.Consumer.Return.Errors = true
-	config.Group.Return.Notifications = true
-	config.Consumer.Offsets.Initial = sarama.OffsetOldest
-	config.Net.TLS.Enable = true
-	config.Net.SASL.Enable = true
-	config.Net.SASL.Handshake = true
-	config.Net.SASL.User = connectionStringKey
-	config.Net.SASL.Password = connectionString
-	return config
-}
 
 func main() {
 
-	config := createSaramaClusterConfig()
-	topic := eventHubName // Rename eventHub name to topic for clarity
+	config := cfg.CreateSaramaClusterConfig()
+	topic := cfg.EventHubName // Rename eventHub name to topic for clarity
 
-	brokers := []string{fmt.Sprintf("%s.servicebus.windows.net:9093", namespace)}
+	brokers := []string{fmt.Sprintf("%s.servicebus.windows.net:9093", cfg.Namespace)}
 	topics := []string{topic}
 
 	/*
@@ -61,7 +36,7 @@ func main() {
 		If there is an underlying issue with the request i.e. incompatible group procotol - I would expect an error response rather than
 		the connection being immediately terminated.
 	*/
-	consumer, err := cluster.NewConsumer(brokers, consumerGroup, topics, config)
+	consumer, err := cluster.NewConsumer(brokers, cfg.ConsumerGroup, topics, config)
 	if err != nil {
 		panic(err)
 	}
