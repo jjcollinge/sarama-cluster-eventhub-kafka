@@ -21,7 +21,7 @@ func main() {
 	/*
 		Issue: EventHubs Kafka head appears to be dropping the connection after receiving a JoinGroup call.
 		----
-		The cluster consumer defined below (#L64) will run a background loop defined here (vendor/github.com/bsm/sarama-cluster/consumer.go#L313).
+		The cluster consumer defined below will run a background loop defined here (vendor/github.com/bsm/sarama-cluster/consumer.go#L313).
 		This loop will (amongst other things) attempt to rebalance the kafka subscriptions.
 		The rebalance method (vendor/github.com/bsm/sarama-cluster/consumer.go#L559:20) will try to re-join any consumer groups.
 		However, the call to JoinGroup (vendor/github.com/Shopify/sarama/broker.go#L315) will fail with the following error:
