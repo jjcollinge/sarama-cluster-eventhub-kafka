@@ -11,16 +11,24 @@ Please refer to the comment on line 46-63 in `consumer/consumer.go` for details.
 Ensure you have Go installed and have setup your $GOPATH accordingly.
 
 
-Clone this repository to the path `$GOPATH/src/github.com/jjcollinge/sarama-cluster-eventhubs-kafka` then
-follow the guide below:
+1. Clone this repository to the path `$GOPATH/src/github.com/jjcollinge/sarama-cluster-eventhubs-kafka`
 
 ```
-REPO_PATH=$GOPATH/src/github.com/jjcollinge/sarama-cluster-eventhubs-kafka
+export REPO_PATH=$GOPATH/src/github.com/jjcollinge/sarama-cluster-eventhubs-kafka
 git clone https://github.com/jjcollinge/sarama-cluster-eventhub-kafka $REPO_PATH
+```
+
+2. Add you EventHubs details to `consumer/consumer.go` and `producer/producer.go`.
+
+3. Run the producer then the consumer
+
+```
 cd $REPO_PATH
 go run producer/producer.go
 go run consumer/consumer.go
 ```
+
+4. Observe "connection reset" errors on the consumer during rebalance.
 
 ## Debugging
 Ensure you have installed the [Go extension for vscode](https://github.com/Microsoft/vscode-go).

@@ -6,8 +6,18 @@ import (
 	"github.com/Shopify/sarama"
 )
 
-func main() {
+/*
+	Define you EventHubs connection details.
+*/
+const (
+	namespace           = "my-namespace"
+	eventHubName        = "my-eventhub"
+	connectionStringKey = "$ConnectionString"
+	connectionString    = "my-connection-string"
+	consumerGroup       = "$Default"
+)
 
+func createSaramaConfig() *sarama.Config {
 	config := sarama.NewConfig()
 	config.Producer.RequiredAcks = sarama.WaitForAll
 	config.Producer.Retry.Max = 5
@@ -17,10 +27,17 @@ func main() {
 	config.Net.TLS.Enable = true
 	config.Net.SASL.Enable = true
 	config.Net.SASL.Handshake = true
-	config.Net.SASL.User = "$ConnectionString"
-	config.Net.SASL.Password = "Endpoint=sb://dotjsonsky2.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=UoxK1J5MO5NxM+iWzS9X3LbkRWk3RmqMZ/Y4QXex0pI="
+	config.Net.SASL.User = connectionStringKey
+	config.Net.SASL.Password = connectionString
+	return config
+}
 
-	brokers := []string{"dotjsonsky2.servicebus.windows.net:9093"}
+func main() {
+
+	config := createSaramaConfig()
+	topic := eventHubName // Rename eventHub name to topic for clarity
+
+	brokers := []string{fmt.Sprintf("%s.servicebus.windows.net:9093", namespace)}
 
 	producer, err := sarama.NewSyncProducer(brokers, config)
 	if err != nil {
@@ -35,7 +52,6 @@ func main() {
 		}
 	}()
 
-	topic := "kafka"
 	msg := &sarama.ProducerMessage{
 		Topic: topic,
 		Value: sarama.StringEncoder("Something Cool"),
