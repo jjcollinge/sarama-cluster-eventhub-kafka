@@ -29,7 +29,7 @@ func main() {
 		or
 			"connection reset by peer"
 		This error is actually raised when trying to read the response from the connection buffer rather than when writting the request.
-		Therefore the actual error is raised here: https://github.com/Shopify/sarama/blob/35324cf48e33d8260e1c7c18854465a904ade249/broker.go#L695
+		Therefore the actual error is raised here: vendor/github.com/Shopify/sarama/broker.go#L695
 		and pushed onto an error channel that is then returned from the original JoinGroup sendAndReceive function.
 		Therefore it appears the server is dropping the connection on receipt of the JoinGroup request before sending a response.
 
